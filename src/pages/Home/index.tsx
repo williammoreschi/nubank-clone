@@ -1,6 +1,7 @@
-import React from 'react';
-import {ScrollView} from 'react-native';
+import React, {useCallback, useState} from 'react';
+import {RefreshControl, ScrollView} from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
+import {useNavigation} from '@react-navigation/native';
 import {
   Container,
   Header,
@@ -29,12 +30,35 @@ import {
   RewardsInfoText,
   RewardsButton,
   RewardsButtonText,
-  Footer,
-  FooterCard,
-  FooterCardText,
+  BoxBlur,
 } from './styles';
 
+import Footer from '../../components/Footer';
+
 const Home: React.FC = () => {
+  const [iconVisibility, setIconVisibility] = useState('eye-off');
+  const [visibility, setVisibility] = useState(true);
+  const navigation = useNavigation();
+
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  const wait = (timeout: number) => {
+    return new Promise((resolve) => {
+      setTimeout(resolve, timeout);
+    });
+  };
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+
+    wait(1000).then(() => setRefreshing(false));
+  }, []);
+
+  const handleVisibility = useCallback(() => {
+    setIconVisibility(visibility ? 'eye' : 'eye-off');
+    setVisibility(!visibility);
+  }, [visibility]);
   return (
     <Container>
       <Header>
@@ -42,42 +66,61 @@ const Home: React.FC = () => {
           Olá, William Gleyton Pessini Moreschi
         </HeaderText>
         <HeaderIcons>
-          <HeaderButton>
-            <Icon name="eye" size={20} color="#ffffff" />
+          <HeaderButton onPress={handleVisibility}>
+            <Icon name={iconVisibility} size={20} color="#ffffff" />
           </HeaderButton>
-          <HeaderButton>
+          <HeaderButton onPress={() => navigation.navigate('Settings')}>
             <Icon name="settings" size={20} color="#ffffff" />
           </HeaderButton>
         </HeaderIcons>
       </Header>
-      <ScrollView>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          // eslint-disable-next-line react/jsx-wrap-multilines
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={['#6d2177']}
+          />
+          // eslint-disable-next-line prettier/prettier
+        }
+      >
         <CardInvoiceButton>
           <CreditCard>
             <Icon name="credit-card" size={20} color="rgba(0,0,0, 0.6)" />
             <CreditCardText>Cartão de Crédito</CreditCardText>
           </CreditCard>
+          {!visibility ? (
+            <BoxBlur />
+          ) : (
+            <>
+              <CurrentBill>
+                <BillText>Fatura Atual</BillText>
+                <BillValue>R$ 1.699,15</BillValue>
+              </CurrentBill>
 
-          <CurrentBill>
-            <BillText>Fatura Atual</BillText>
-            <BillValue>R$ 1.699,15</BillValue>
-          </CurrentBill>
-
-          <AvailableCredit>
-            <AvailableCreditText>Limite Disponível</AvailableCreditText>
-            <AvailableCreditValue>R$ 170,85</AvailableCreditValue>
-          </AvailableCredit>
+              <AvailableCredit>
+                <AvailableCreditText>Limite Disponível</AvailableCreditText>
+                <AvailableCreditValue>R$ 2.563,85</AvailableCreditValue>
+              </AvailableCredit>
+            </>
+          )}
         </CardInvoiceButton>
 
         <AccountStatusButton>
           <Account>
             <Icon name="dollar-sign" size={20} color="rgba(0,0,0,0.6)" />
-            <AccountText>Cartão de Crédito</AccountText>
+            <AccountText>Conta</AccountText>
           </Account>
-
-          <Balance>
-            <BalanceText>Saldo Disponível</BalanceText>
-            <BalanceValue style={{color: '#000'}}>R$ 0,00</BalanceValue>
-          </Balance>
+          {!visibility ? (
+            <BoxBlur />
+          ) : (
+            <Balance>
+              <BalanceText>Saldo Disponível</BalanceText>
+              <BalanceValue style={{color: '#000'}}>R$ 154.596,18</BalanceValue>
+            </Balance>
+          )}
         </AccountStatusButton>
 
         <RewardsCardButton>
@@ -95,31 +138,7 @@ const Home: React.FC = () => {
           </RewardsButton>
         </RewardsCardButton>
       </ScrollView>
-
-      <Footer>
-        <ScrollView horizontal alwaysBounceHorizontal>
-          <FooterCard>
-            <Icon name="command" size={20} color="#ffffff" />
-            <FooterCardText>Pix</FooterCardText>
-          </FooterCard>
-          <FooterCard>
-            <Icon name="dollar-sign" size={20} color="#ffffff" />
-            <FooterCardText>Pagar</FooterCardText>
-          </FooterCard>
-          <FooterCard>
-            <Icon name="thumbs-up" size={20} color="#ffffff" />
-            <FooterCardText>Indicar amigos</FooterCardText>
-          </FooterCard>
-          <FooterCard>
-            <Icon name="corner-down-right" size={20} color="#ffffff" />
-            <FooterCardText>Transferir</FooterCardText>
-          </FooterCard>
-          <FooterCard>
-            <Icon name="plus-circle" size={20} color="#ffffff" />
-            <FooterCardText>Depositar</FooterCardText>
-          </FooterCard>
-        </ScrollView>
-      </Footer>
+      <Footer />
     </Container>
   );
 };

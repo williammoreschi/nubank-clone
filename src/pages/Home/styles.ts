@@ -1,3 +1,4 @@
+import {StyleSheet} from 'react-native';
 import styled from 'styled-components/native';
 import {lighten, rgba, darken} from 'polished';
 
@@ -11,6 +12,7 @@ export const Header = styled.View`
   margin-top: 24px;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
 `;
 
 export const HeaderText = styled.Text`
@@ -151,7 +153,8 @@ export const RewardsButton = styled.TouchableOpacity`
   width: 100px;
   border-radius: 4px;
   height: 40px;
-  border: 1px solid #6d2177;
+  border-width: ${StyleSheet.hairlineWidth}px;
+  border-color: #6d2177;
   align-items: center;
   justify-content: center;
 `;
@@ -161,22 +164,7 @@ export const RewardsButtonText = styled.Text`
   font-weight: bold;
 `;
 
-export const Footer = styled.View`
-  flex-direction: row;
-  margin-top: 10px;
-  padding: 10px 0;
-`;
-export const FooterCard = styled.TouchableOpacity`
-  width: 90px;
-  height: 100px;
-  background-color: ${lighten(0.1, '#6d2177')};
-  justify-content: space-between;
-  padding: 5px;
-  border-radius: 4px;
-  margin-right: 8px;
-`;
-
-export const FooterCardText = styled.Text`
-  color: #ffffff;
-  font-size: 13px;
+export const BoxBlur = styled.View`
+  height: 50px;
+  background: #eaeaea;
 `;
