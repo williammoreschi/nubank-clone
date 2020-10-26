@@ -77,7 +77,6 @@ const Home: React.FC = () => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         refreshControl={
-          // eslint-disable-next-line react/jsx-wrap-multilines
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}

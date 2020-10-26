@@ -48,7 +48,6 @@ const Settings: React.FC = () => {
             <AccountText>Banco 206 - Nu Pagamentos S.S.</AccountText>
           </Account>
         </Code>
-
         <Nav>
           <NavItem>
             <Icon name="help-circle" size={20} color="#FFF" />
